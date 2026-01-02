@@ -20,16 +20,11 @@ hmac = {version ="*"}
 sha2 = {version ="*"}
 base64 = {version ="*"}
 urldecode = {version ="*"}
-deep-translator = {version="*"}
-mysql = {version ="*"}
 hex-literal = {version ="*"}
-sanitize_html = {version ="*"}
 random-number = {version ="*"}
 toml = {version ="*"}
 homedir = {version ="*"}
 kuchiki = {version ="*"}
-
-
 
 clap = {version='*', features = ["cargo","derive"]}
 
