@@ -1,11 +1,12 @@
+use crate::exchange;
 use axum::{Json, extract, extract::Query, response::IntoResponse};
 use chrono::Utc;
-//use reqwest::Error;
+//use exchange::*;
+use exchange::ecb;
 use rusqlite::{Connection, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::error::Error;
-
 #[derive(Debug, Serialize)]
 struct Rated {
     target_code: String,
@@ -55,7 +56,7 @@ struct Ratex {
     target_value: f64,
 }
 pub async fn daily(Query(params): Query<HashMap<String, String>>) -> impl IntoResponse {
-    let y = abc().await;
+    let y = ecb().await;
 
     let mut r = Rated {
         target_code: "".to_string(),
@@ -195,14 +196,4 @@ RUB REAL NOT NULL DEFAULT 0.0
     //println!("{:?}", x.await);
 
     Json(r)
-}
-
-pub async fn abc() -> String {
-    "hello".to_string()
-}
-
-pub async fn ecb() -> Result<String, Box<dyn Error>> {
-    //  let url = format!("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
-    //    let response = reqwest::get(url).await;
-    Ok("".to_string())
 }

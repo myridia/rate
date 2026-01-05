@@ -1,9 +1,35 @@
 use axum::{Json, extract, extract::Query, response::IntoResponse};
+use reqwest::*;
 use rusqlite::{Connection, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::error::Error;
 
 use chrono::Utc;
+
+pub async fn ecb() -> Result<String, Box<dyn Error>> {
+    let url = format!("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
+    let client = reqwest::Client::new();
+    let _res = client
+        .get(url)
+        .header("User-Agent", "Myridia Rate")
+        .send()
+        .await;
+    let res = _res.unwrap().text().await.unwrap().to_string();
+    //let inv: Invoice = serde_json::from_str(&r).unwrap();
+    println!("{:?}", res);
+    /*
+    let ret = client.get(url)
+        .await
+        .unwrap()
+        .text()
+        .await
+        .unwrap()
+        .to_string();
+
+    */
+    Ok("".to_string())
+}
 
 /*
 
