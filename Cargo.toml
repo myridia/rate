@@ -29,6 +29,7 @@ clap = {version='*', features = ["cargo","derive"]}
 #sqlite = {version ="*"}
 rusqlite = { version = "*", features = ["bundled"] }
 reqwest = { version = "*", features = ["json","blocking"] }
+serde-xml-rs = "0.6"
 
 [lib]
 name = "libs"
