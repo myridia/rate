@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'myridiax'
+    if: github.repository_owner == 'myridia'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -23,14 +23,14 @@ jobs:
       - name: SCP files to server
         run: |
 
-          wget https://github.com/myridia/mtranslate/releases/download/main/mtranslate_linux -O mtranslate
-          chmod 777 mtranslate 
+          wget https://github.com/myridia/mrate/releases/download/main/rate_linux -O mrate
+          chmod 777 mrate 
           echo "list root folder" 
           ls -all
           
           echo "upload..."
-          scp mtranslate ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_PATH }}
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mtranslate"
+          scp mrate ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_PATH }}
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mrate"
 
 
 

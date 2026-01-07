@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   build_freebsd:
-    if: github.repository_owner == 'myridiax'
+    if: github.repository_owner == 'myridia'
     runs-on: ubuntu-22.04
     name: A job to run FreeBSD
     env:
@@ -41,7 +41,7 @@ jobs:
           rustup target list
           cargo build --target x86_64-unknown-freebsd --release 
           ls target/x86_64-unknown-freebsd/release
-          cp target/x86_64-unknown-freebsd/release/mtranslate target/x86_64-unknown-freebsd/release/mtranslate_freebsd
+          cp target/x86_64-unknown-freebsd/release/rate target/x86_64-unknown-freebsd/release/rate_freebsd
           #ls target/x86_64-unknown-freebsd/release -all
 
           
@@ -50,9 +50,9 @@ jobs:
       with:
         run: | 
           ls target/x86_64-unknown-freebsd/release -all
-          file target/x86_64-unknown-freebsd/release/mtranslate_freebsd 
+          file target/x86_64-unknown-freebsd/release/rate_freebsd 
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file:  target/x86_64-unknown-freebsd/release/mtranslate_freebsd
+        file:  target/x86_64-unknown-freebsd/release/rate_freebsd
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
