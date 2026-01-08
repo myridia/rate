@@ -35,8 +35,8 @@ jobs:
     
       - name: compile macos
         run: |
-          # cargo build --target x86_64-apple-darwin --release 
-          cargo build  --release 
+          cargo build --target x86_64-apple-darwin --release 
+          #cargo build  --release 
 
 
           
