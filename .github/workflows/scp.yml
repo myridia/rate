@@ -28,9 +28,9 @@ jobs:
           echo "list root folder" 
           ls -all
           
-          echo "upload..."
-          scp mrate ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_PATH }}
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mrate"
+          #echo "upload..."
+          #scp mrate ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_PATH }}
+          #ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mrate"
 
 
 
