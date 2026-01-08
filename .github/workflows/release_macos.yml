@@ -1,4 +1,3 @@
-name: Build Release Macos
 
 on:
   push:
@@ -13,6 +12,7 @@ permissions:
   pull-requests: write 
   issues: read
   packages: none
+
 jobs:
   build_macos_intel:
     if: github.repository_owner == 'myridia'
