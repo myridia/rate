@@ -1,12 +1,5 @@
-//use axum::{Json, extract, extract::Query, response::IntoResponse};
-//use chrono::Utc;
-//use reqwest::*;
-//use serde::{Deserialize, Serialize};
-//use serde_xml_rs::from_str;
-use std::collections::HashMap;
-
 use rusqlite::{Connection, Result, params};
-//use std::error::Error;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Ratex {
@@ -47,7 +40,6 @@ pub async fn last_record(target_code: &str) -> Result<Vec<f64>> {
 pub async fn last_records() -> Result<Vec<f64>> {
     println!("...last_record fn");
 
-    let mut v: Vec<f64> = vec![];
     let conn = Connection::open("rate.db").unwrap();
     let mut stmt = conn
         .prepare(
@@ -85,7 +77,7 @@ usd FROM rate ORDER BY date desc LIMIT 1 ",
 
     let c = stmt.column_count().clone();
 
-    let mut row = stmt
+    let row = stmt
         .query_row(params![], |r| {
             let mut vec: Vec<f64> = vec![];
             for i in 0..c {
