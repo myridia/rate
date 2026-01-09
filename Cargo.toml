@@ -5,31 +5,16 @@ edition = "2024"
 
 [dependencies]
 axum = { version = "*" }
-axum_cors = { version = "*"}
-axum-client-ip = { version = "*"}
 chrono = { version = "*", features = ["serde"] }
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
-json = "*"
 tokio = { version = "*", features = ["full"] }
 tower-http = { version = "*", features = ["cors"] }
-uuid = { version = "*", features = ["v4", "serde"] }
-envy = { version = "*"}
-jwt = {version ="*"}
-hmac = {version ="*"}
-sha2 = {version ="*"}
 base64 = {version ="*"}
-urldecode = {version ="*"}
-hex-literal = {version ="*"}
-random-number = {version ="*"}
-toml = {version ="*"}
-homedir = {version ="*"}
-kuchiki = {version ="*"}
-clap = {version='*', features = ["cargo","derive"]}
-#sqlite = {version ="*"}
 rusqlite = { version = "*", features = ["bundled"] }
 reqwest = { version = "*", features = ["json","blocking"] }
 serde-xml-rs = "0.6"
+gethostname = {version ="*"}
 
 [lib]
 name = "libs"

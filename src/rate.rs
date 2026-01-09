@@ -9,6 +9,7 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::HashMap;
 //use std::error::Error;
+use gethostname::gethostname;
 #[derive(Debug, Serialize)]
 struct Rated {
     target_code: String,
@@ -83,34 +84,36 @@ pub async fn daily(Query(params): Query<HashMap<String, String>>) -> impl IntoRe
         r.source_code = params["s"].to_string();
         r.target_code = params["t"].to_string();
         r.source_value = params["v"].parse().unwrap();
-    }
-    let _d = new().await;
-    let mut last = last_record(&r.target_code).await.unwrap();
 
-    if !last.is_empty().clone() {
-        let now = Utc::now();
-        let today: i32 = now.format("%Y%m%d16").to_string().parse().unwrap();
-        let date: i32 = last[0] as i32;
-        println!(
-            "today: {0} | record: {1} | diff: {2}",
-            today,
-            date,
-            today - date
-        );
-        if today - date >= 300 {
+        let _d = new().await;
+        let mut last = last_record(&r.target_code).await.unwrap();
+
+        if !last.is_empty().clone() {
+            let now = Utc::now();
+            let today: i32 = now.format("%Y%m%d16").to_string().parse().unwrap();
+            let date: i32 = last[0] as i32;
+            println!(
+                "today: {0} | record: {1} | diff: {2}",
+                today,
+                date,
+                today - date
+            );
+            if today - date >= 300 {
+                let rates = get_ecb_rates().await.unwrap();
+                let _l = insert(rates).await;
+                last = last_record(&r.target_code).await.unwrap();
+            }
+        } else {
             let rates = get_ecb_rates().await.unwrap();
             let _l = insert(rates).await;
             last = last_record(&r.target_code).await.unwrap();
         }
+
+        r.target_rate = last[1];
+        r.target_value = r.target_rate * r.source_value;
     } else {
-        let rates = get_ecb_rates().await.unwrap();
-        let _l = insert(rates).await;
-        last = last_record(&r.target_code).await.unwrap();
+        r.msg = format!("Missing Parameters example usage: http://0.0.0.0:8087?s=eur&t=thb&v=2'");
     }
-
-    r.target_rate = last[1];
-    r.target_value = r.target_rate * r.source_value;
-
     Json(r)
 }
 

@@ -3,7 +3,7 @@ echo -e "TaskID\t Description"
 echo -e "1\t Test via curl LOCAL"
 echo -e "2\t Print Currencies"
 echo -e "3\t Download"
-echo -e "4\t / root - all rates"
+echo -e "4\t / empty"
 echo -e "5\t /help "
 
 until [ "$task" = "0" ]; do
