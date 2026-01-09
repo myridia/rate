@@ -1,7 +1,8 @@
 # ![email_gateway](pages/public/img/logo.png) rate
 * Myridia's online currency rate service
 
-
+# Demo 
+https://mrate.myridia.com 
 
 
 # How to Enable the mrate Server
