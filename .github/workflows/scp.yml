@@ -30,7 +30,7 @@ jobs:
           echo "...upload."
           scp mrate ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_PATH }}
           echo "...restart"
-          #ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mrate"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mrate"
 
 
 
