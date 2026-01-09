@@ -3,8 +3,8 @@ echo -e "TaskID\t Description"
 echo -e "1\t Test via curl LOCAL"
 echo -e "2\t Print Currencies"
 echo -e "3\t Download"
-echo -e "4\t / empty"
-echo -e "5\t /help "
+echo -e "4\t / - root"
+echo -e "5\t /all "
 
 until [ "$task" = "0" ]; do
 read task
@@ -24,7 +24,7 @@ elif [ "$task" = "4" ]; then
     curl -X GET 'http://0.0.0.0:8087/'
 elif [ "$task" = "5" ]; then
     echo "...${task}"
-    curl -X GET 'http://0.0.0.0:8087/help'        
+    curl -X GET 'http://0.0.0.0:8087/all'        
 else
     echo "Goodbye! - Exit"
 fi

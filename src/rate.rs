@@ -2,7 +2,7 @@ use crate::database;
 use crate::exchange;
 use axum::{Json, extract::Query, response::IntoResponse};
 use chrono::Utc;
-use database::{insert, last_record, new};
+use database::{insert, last_record, last_records, new};
 use exchange::get_ecb_rates;
 //use rusqlite::{Connection, Result};
 use serde::Serialize;
@@ -121,4 +121,54 @@ pub async fn currencies(Query(params): Query<HashMap<String, String>>) -> impl I
     let mut v: Vec<&str> = vec![];
     let fields = Rate::field_names();
     Json(fields)
+}
+
+pub async fn all() -> impl IntoResponse {
+    //let y = ecb().await;
+
+    let mut rates = Rate::default();
+    let mut r = Rated {
+        target_code: "".to_string(),
+        source_code: "".to_string(),
+        source_value: 0.0,
+        target_value: 0.0,
+        target_rate: 0.0,
+        date: "".to_string(),
+        msg: "".to_string(),
+    };
+
+    let _d = new().await;
+    let row = last_records().await.unwrap();
+
+    rates.date = row[0] as i32;
+    rates.jpy = row[1];
+    rates.czk = row[2];
+    rates.dkk = row[3];
+    rates.gbp = row[4];
+    rates.huf = row[5];
+    rates.pln = row[6];
+    rates.ron = row[7];
+    rates.sek = row[8];
+    rates.chf = row[9];
+    rates.isk = row[10];
+    rates.nok = row[11];
+    rates.aud = row[12];
+    rates.brl = row[13];
+    rates.cad = row[14];
+    rates.cny = row[15];
+    rates.hkd = row[16];
+    rates.idr = row[17];
+    rates.ils = row[18];
+    rates.inr = row[19];
+    rates.krw = row[20];
+    rates.mxn = row[21];
+    rates.myr = row[22];
+    rates.nzd = row[23];
+    rates.php = row[24];
+    rates.sgd = row[25];
+    rates.thb = row[26];
+    rates.zar = row[27];
+    rates.usd = row[28];
+    //    println!("{:?}", rates);
+    Json(rates)
 }

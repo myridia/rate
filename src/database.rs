@@ -5,7 +5,7 @@
 //use serde_xml_rs::from_str;
 use std::collections::HashMap;
 
-use rusqlite::{Connection, Result};
+use rusqlite::{Connection, Result, params};
 //use std::error::Error;
 
 #[derive(Debug)]
@@ -42,6 +42,62 @@ pub async fn last_record(target_code: &str) -> Result<Vec<f64>> {
     }
 
     Ok(v)
+}
+
+pub async fn last_records() -> Result<Vec<f64>> {
+    println!("...last_record fn");
+
+    let mut v: Vec<f64> = vec![];
+    let conn = Connection::open("rate.db").unwrap();
+    let mut stmt = conn
+        .prepare(
+            "SELECT date,
+jpy,
+czk,
+dkk,
+gbp,
+huf,
+pln,
+ron,
+sek,
+chf,
+isk,
+nok,
+aud,
+brl,
+cad,
+cny,
+hkd,
+idr,
+ils,
+inr,
+krw,
+mxn,
+myr,
+nzd,
+php,
+sgd,
+thb,
+zar,
+usd FROM rate ORDER BY date desc LIMIT 1 ",
+        )
+        .unwrap();
+
+    let c = stmt.column_count().clone();
+
+    let mut row = stmt
+        .query_row(params![], |r| {
+            let mut vec: Vec<f64> = vec![];
+            for i in 0..c {
+                let v: f64 = r.get(i).unwrap();
+                vec.push(v);
+            }
+            Ok(vec)
+        })
+        .unwrap();
+
+    //println!("{:?}", rates);
+    Ok(row)
 }
 
 pub async fn insert(r: HashMap<String, f64>) -> Result<()> {
