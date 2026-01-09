@@ -1,11 +1,10 @@
-name: Build Release Macos
+name: release_macos
 on:
-  push:
-    branches: ["main"]
-    tags:
-      - '*'
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["release_linux"]
+    types:
+      - completed
+
 
 permissions:
   contents: write
