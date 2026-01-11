@@ -182,19 +182,18 @@ pub async fn update_rates() -> impl IntoResponse {
     let today: i32 = now.format("%Y%m%d16").to_string().parse().unwrap();
     let date: i32 = last[0] as i32;
     let weekday = &now.weekday().to_string();
-    if weekday != "Sun" && weekday != "Sat" {
-        if today != date {
-            println!(
-                "today: {0} | record: {1} | diff: {2} | weekday: {3} ",
-                today,
-                date,
-                today - date,
-                weekday
-            );
-            let rates = get_ecb_rates().await.unwrap();
-            let _l = insert(rates).await;
-            u.ok = true;
-        }
+    if today != date {
+        u.msg = format!(
+            "today: {0} | record: {1} | diff: {2} | weekday: {3} ",
+            today,
+            date,
+            today - date,
+            weekday
+        );
+        let rates = get_ecb_rates().await.unwrap();
+        let _l = insert(rates).await;
+        u.ok = true;
     }
+
     Json(u)
 }
