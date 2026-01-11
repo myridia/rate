@@ -27,7 +27,9 @@ jobs:
           chmod 777 mrate
           echo "...list root folder"
           ls -all
-          echo "...upload."
+          echo "...delete mrate"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "rm /var/customers/webs/mrate/mrate"
+          echo "...upload mrate"
           scp mrate ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.SERVER_PATH }}
           echo "...restart"
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "systemctl restart mrate"
