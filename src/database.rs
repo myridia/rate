@@ -39,7 +39,7 @@ pub async fn last_record(target_code: &str) -> Result<Vec<f64>> {
 
 pub async fn last_records() -> Result<Vec<f64>> {
     println!("...last_record fn");
-
+    let mut row: Vec<f64> = vec![];
     let conn = Connection::open("rate.db").unwrap();
     let mut stmt = conn
         .prepare(
@@ -71,24 +71,26 @@ php,
 sgd,
 thb,
 zar,
-usd FROM rate ORDER BY date desc LIMIT 1 ",
+rub,
+usd,
+eur FROM rate ORDER BY date desc LIMIT 1 ",
         )
         .unwrap();
 
     let c = stmt.column_count().clone();
 
-    let row = stmt
-        .query_row(params![], |r| {
-            let mut vec: Vec<f64> = vec![];
-            for i in 0..c {
-                let v: f64 = r.get(i).unwrap();
-                vec.push(v);
-            }
-            Ok(vec)
-        })
-        .unwrap();
+    let xrow = stmt.query_row(params![], |r| {
+        let mut vec: Vec<f64> = vec![];
+        for i in 0..c {
+            let v: f64 = r.get(i).unwrap();
+            vec.push(v);
+        }
+        Ok(vec)
+    });
 
-    //println!("{:?}", rates);
+    if xrow.is_ok() {
+        row = xrow.unwrap();
+    }
     Ok(row)
 }
 
@@ -141,7 +143,8 @@ sgd real not null default 0.0,
 thb real not null default 0.0,
 zar real not null default 0.0,
 rub real not null default 0.0,
-usd real not null default 0.0
+usd real not null default 0.0,
+eur real not null default 0.0
 
         )",
         (), // empty list of parameters.

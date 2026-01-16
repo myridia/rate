@@ -29,7 +29,7 @@ async fn main() {
         .layer(CorsLayer::permissive());
 
     println!("Server started successfully");
-    let host = "0.0.0.0:8087";
+    let host = "127.0.0.1:8087";
     println!("http://{}/test", host);
     println!("http://{}?s=eur&t=thb&v=1", host);
 

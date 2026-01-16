@@ -58,7 +58,9 @@ pub struct Rate {
     sgd: f64,
     thb: f64,
     zar: f64,
+    rub: f64,
     usd: f64,
+    eur: f64,
 }
 
 impl Rate {
@@ -138,8 +140,8 @@ pub async fn daily_rates() -> impl IntoResponse {
     let mut rates = Rate::default();
 
     let _d = new().await;
-    let row = last_records().await.unwrap();
-
+    //let row = last_records().await.unwrap();
+    /*
     rates.date = row[0] as i32;
     rates.jpy = row[1];
     rates.czk = row[2];
@@ -168,7 +170,10 @@ pub async fn daily_rates() -> impl IntoResponse {
     rates.sgd = row[25];
     rates.thb = row[26];
     rates.zar = row[27];
-    rates.usd = row[28];
+    rates.rub = row[28];
+    rates.usd = row[29];
+    rates.eur = row[30];
+    */
     //    println!("{:?}", rates);
     Json(rates)
 }
@@ -176,24 +181,32 @@ pub async fn daily_rates() -> impl IntoResponse {
 pub async fn update_rates() -> impl IntoResponse {
     //let y = ecb().await;
     let mut u = Update::default();
+
     let _d = new().await;
     let last = last_records().await.unwrap();
-    let now = Utc::now();
-    let today: i32 = now.format("%Y%m%d16").to_string().parse().unwrap();
-    let date: i32 = last[0] as i32;
-    let weekday = &now.weekday().to_string();
-    if today != date {
-        u.msg = format!(
-            "today: {0} | record: {1} | diff: {2} | weekday: {3} ",
-            today,
-            date,
-            today - date,
-            weekday
-        );
-        let rates = get_ecb_rates().await.unwrap();
-        let _l = insert(rates).await;
-        u.ok = true;
-    }
+    if last.len() > 0 {
+        println!("{:?}", last.len());
 
+        let now = Utc::now();
+        let today: i32 = now.format("%Y%m%d16").to_string().parse().unwrap();
+        let date: i32 = last[0] as i32;
+        let weekday = &now.weekday().to_string();
+        if today != date {
+            u.msg = format!(
+                "today: {0} | record: {1} | diff: {2} | weekday: {3} ",
+                today,
+                date,
+                today - date,
+                weekday
+            );
+            let rates = get_ecb_rates().await.unwrap();
+            let _l = insert(rates).await;
+            u.ok = true;
+        }
+    } else {
+        println!("no data: {0}", last.len());
+        let rates = get_ecb_rates().await.unwrap();
+        println!("{:?}", rates);
+    }
     Json(u)
 }
