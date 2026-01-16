@@ -96,7 +96,7 @@ pub async fn daily_rate(Query(params): Query<HashMap<String, String>>) -> impl I
     };
     if params.contains_key("t") && params.contains_key("s") && params.contains_key("v") {
         let fields = Rate::field_names();
-        if fields.contains(&r.source_code) && fields.contains(&r.target_code) {
+        if fields.contains(&params["s"].to_string()) && fields.contains(&params["t"].to_string()) {
             //println!("{:?}", fields);
             r.source_code = params["s"].to_string();
             r.target_code = params["t"].to_string();
