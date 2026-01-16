@@ -54,7 +54,7 @@ pub async fn get_ecb_rates() -> Result<HashMap<String, f64>, Box<dyn Error>> {
             for time_entry in envelope.cube_root.time_entries {
                 let date = format!("{0}16", time_entry.time.to_string().replace("-", ""));
                 rates.insert("date".to_string(), date.parse().unwrap());
-                rates.insert("rub".to_string(), 0.0);
+                rates.insert("rub".to_string(), 90.0);
                 rates.insert("eur".to_string(), 1.0);
                 for r in time_entry.rates {
                     if r.currency.to_lowercase() != "try" {

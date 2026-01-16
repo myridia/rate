@@ -95,32 +95,40 @@ pub async fn daily_rate(Query(params): Query<HashMap<String, String>>) -> impl I
         r.source_value = params["v"].parse().unwrap();
 
         let _d = new().await;
-        let mut last = last_record(&r.target_code).await.unwrap();
+        let mut last = last_record(&r.source_code, &r.target_code).await.unwrap();
+        r.date = last[0] as i32;
+        let source_rate = last[0];
+        let target_rate = last[1];
 
+        println!("data: {:?}", last);
+        /*
         if !last.is_empty().clone() {
             let now = Utc::now();
             let today: i32 = now.format("%Y%m%d16").to_string().parse().unwrap();
             let date: i32 = last[0] as i32;
-            println!(
-                "today: {0} | record: {1} | diff: {2}",
-                today,
-                date,
-                today - date
+            /*
+                println!(
+                    "today: {0} | record: {1} | diff: {2}",
+                    today,
+                    date,
+                    today - date
             );
+                */
             if today - date >= 300 {
                 let rates = get_ecb_rates().await.unwrap();
                 let _l = insert(rates).await;
-                last = last_record(&r.target_code).await.unwrap();
+                last = last_record(&r.source_code, &r.target_code).await.unwrap();
             }
         } else {
             let rates = get_ecb_rates().await.unwrap();
             let _l = insert(rates).await;
-            last = last_record(&r.target_code).await.unwrap();
+            last = last_record(&r.source_code, &r.target_code).await.unwrap();
         }
 
         r.date = last[0] as i32;
         r.target_rate = last[1];
         r.target_value = r.target_rate * r.source_value;
+        */
     } else {
         //let x = gethostname().into_string();
         //println!("{:?}", x);
@@ -140,40 +148,45 @@ pub async fn daily_rates() -> impl IntoResponse {
     let mut rates = Rate::default();
 
     let _d = new().await;
-    //let row = last_records().await.unwrap();
-    /*
-    rates.date = row[0] as i32;
-    rates.jpy = row[1];
-    rates.czk = row[2];
-    rates.dkk = row[3];
-    rates.gbp = row[4];
-    rates.huf = row[5];
-    rates.pln = row[6];
-    rates.ron = row[7];
-    rates.sek = row[8];
-    rates.chf = row[9];
-    rates.isk = row[10];
-    rates.nok = row[11];
-    rates.aud = row[12];
-    rates.brl = row[13];
-    rates.cad = row[14];
-    rates.cny = row[15];
-    rates.hkd = row[16];
-    rates.idr = row[17];
-    rates.ils = row[18];
-    rates.inr = row[19];
-    rates.krw = row[20];
-    rates.mxn = row[21];
-    rates.myr = row[22];
-    rates.nzd = row[23];
-    rates.php = row[24];
-    rates.sgd = row[25];
-    rates.thb = row[26];
-    rates.zar = row[27];
-    rates.rub = row[28];
-    rates.usd = row[29];
-    rates.eur = row[30];
-    */
+    let row = last_records().await.unwrap();
+    //println!("{:?}", row);
+    if row.len() > 0 {
+        rates.date = row[0] as i32;
+        rates.jpy = row[1];
+        rates.czk = row[2];
+        rates.dkk = row[3];
+        rates.gbp = row[4];
+        rates.huf = row[5];
+        rates.pln = row[6];
+        rates.ron = row[7];
+        rates.sek = row[8];
+        rates.chf = row[9];
+        rates.isk = row[10];
+        rates.nok = row[11];
+        rates.aud = row[12];
+        rates.brl = row[13];
+        rates.cad = row[14];
+        rates.cny = row[15];
+        rates.hkd = row[16];
+        rates.idr = row[17];
+        rates.ils = row[18];
+        rates.inr = row[19];
+        rates.krw = row[20];
+        rates.mxn = row[21];
+        rates.myr = row[22];
+        rates.nzd = row[23];
+        rates.php = row[24];
+        rates.sgd = row[25];
+        rates.thb = row[26];
+        rates.zar = row[27];
+        rates.rub = row[28];
+        rates.usd = row[29];
+        rates.eur = row[30];
+    }
+    {
+        let xrates = get_ecb_rates().await.unwrap();
+        let _l = insert(xrates).await;
+    }
     //    println!("{:?}", rates);
     Json(rates)
 }
@@ -204,9 +217,10 @@ pub async fn update_rates() -> impl IntoResponse {
             u.ok = true;
         }
     } else {
-        println!("no data: {0}", last.len());
-        let rates = get_ecb_rates().await.unwrap();
-        println!("{:?}", rates);
+        //println!("no data: {0}", last.len());
+        let xrates = get_ecb_rates().await.unwrap();
+        let _l = insert(xrates).await;
+        //println!("{:?}", rates);
     }
     Json(u)
 }
