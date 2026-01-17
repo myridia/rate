@@ -1,6 +1,39 @@
 # ![email_gateway](pages/public/img/logo.png) rate
 * Myridia's online currency rate service
 
+
+```
+JPY
+CZK
+DKK
+GBP
+HUF
+PLN
+RON
+SEK
+CHF
+ISK
+NOK
+AUD
+BRL
+CAD
+CNY
+HKD
+IDR
+ILS
+INR
+KRW
+MXN
+MYR
+NZD
+PHP
+SGD
+THB
+ZAR
+RUB
+USD
+EUR
+```
 # Demo 
 https://mrate.myridia.com 
 
@@ -25,6 +58,7 @@ RestartSec=1
 User=root
 AmbientCapabilities=CAP_SYS_RAWIO
 ExecStart=/usr/bin/env /var/customers/webs/mrate/mrate
+
 
 [Install]
 WantedBy=multi-user.target

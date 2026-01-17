@@ -5,7 +5,7 @@ use axum::{
 };
 
 use libs::help::help;
-use libs::rate::{currencies, daily_rate, daily_rates, update_rates};
+use libs::rate::{currencies, eur_rates, rate, rates, update_rates};
 use libs::test::test;
 use std::net::SocketAddr;
 use tower_http::cors::CorsLayer;
@@ -19,9 +19,10 @@ async fn main() {
     let x: u8 = 3;
 
     let app = Router::new()
-        .route("/", get(daily_rate))
+        .route("/", get(rate))
+        .route("/eur", get(eur_rates))
+        .route("/{:currency}", get(rates))
         .route("/currencies", get(currencies))
-        .route("/daily", get(daily_rates))
         .route("/update", get(update_rates))
         .route("/help", get(help))
         .route("/test", get(move || test(x)))
