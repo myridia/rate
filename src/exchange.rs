@@ -37,7 +37,7 @@ struct RateEntry {
 }
 
 pub async fn get_ecb_rates() -> Result<HashMap<String, f64>, Box<dyn Error>> {
-    print!("...get_ecb_rates fn");
+    //println!("...get_ecb_rates fn");
     let url = format!("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
     let client = reqwest::Client::new();
     let _res = client

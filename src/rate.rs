@@ -1,6 +1,10 @@
 use crate::database;
 use crate::exchange;
-use axum::{Json, extract::Query, response::IntoResponse};
+use axum::{
+    Json,
+    extract::{Path, Query},
+    response::IntoResponse,
+};
 use chrono::{Datelike, Utc};
 use database::{insert, last_record, last_records, new};
 use exchange::get_ecb_rates;
@@ -77,9 +81,70 @@ impl Rate {
             .map(|k| k.to_string())
             .collect()
     }
+
+    fn get(&mut self, currency: &str) -> f64 {
+        let json_value: Value = serde_json::to_value(self).unwrap();
+        let mut r = 0.0;
+        let k: Vec<String> = json_value
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(|k| k.to_string())
+            .collect();
+
+        let v: Vec<String> = json_value
+            .as_object()
+            .unwrap()
+            .values()
+            .map(|k| k.to_string())
+            .collect();
+        for (kk, i) in k.iter().enumerate() {
+            if i == currency {
+                r = v[kk].parse().unwrap();
+                break;
+            }
+        }
+        return r;
+    }
+
+    fn set_base(&mut self, currency: &str) -> bool {
+        let new_base = self.eur / self.get(currency);
+        self.jpy = ((self.jpy * new_base) * 100.0).round() / 100.0;
+        self.czk = ((self.czk * new_base) * 100.0).round() / 100.0;
+        self.dkk = ((self.dkk * new_base) * 100.0).round() / 100.0;
+        self.gbp = ((self.gbp * new_base) * 100.0).round() / 100.0;
+        self.huf = ((self.huf * new_base) * 100.0).round() / 100.0;
+        self.pln = ((self.pln * new_base) * 100.0).round() / 100.0;
+        self.ron = ((self.ron * new_base) * 100.0).round() / 100.0;
+        self.sek = ((self.sek * new_base) * 100.0).round() / 100.0;
+        self.chf = ((self.chf * new_base) * 100.0).round() / 100.0;
+        self.isk = ((self.isk * new_base) * 100.0).round() / 100.0;
+        self.nok = ((self.nok * new_base) * 100.0).round() / 100.0;
+        self.aud = ((self.aud * new_base) * 100.0).round() / 100.0;
+        self.brl = ((self.brl * new_base) * 100.0).round() / 100.0;
+        self.cad = ((self.cad * new_base) * 100.0).round() / 100.0;
+        self.cny = ((self.cny * new_base) * 100.0).round() / 100.0;
+        self.hkd = ((self.hkd * new_base) * 100.0).round() / 100.0;
+        self.idr = ((self.idr * new_base) * 100.0).round() / 100.0;
+        self.ils = ((self.ils * new_base) * 100.0).round() / 100.0;
+        self.inr = ((self.inr * new_base) * 100.0).round() / 100.0;
+        self.krw = ((self.krw * new_base) * 100.0).round() / 100.0;
+        self.mxn = ((self.mxn * new_base) * 100.0).round() / 100.0;
+        self.myr = ((self.myr * new_base) * 100.0).round() / 100.0;
+        self.nzd = ((self.nzd * new_base) * 100.0).round() / 100.0;
+        self.php = ((self.php * new_base) * 100.0).round() / 100.0;
+        self.sgd = ((self.sgd * new_base) * 100.0).round() / 100.0;
+        self.thb = ((self.thb * new_base) * 100.0).round() / 100.0;
+        self.zar = ((self.zar * new_base) * 100.0).round() / 100.0;
+        self.rub = ((self.rub * new_base) * 100.0).round() / 100.0;
+        self.usd = ((self.usd * new_base) * 100.0).round() / 100.0;
+        self.eur = ((self.eur * new_base) * 100.0).round() / 100.0;
+
+        return true;
+    }
 }
 
-pub async fn daily_rate(Query(params): Query<HashMap<String, String>>) -> impl IntoResponse {
+pub async fn rate(Query(params): Query<HashMap<String, String>>) -> impl IntoResponse {
     //let y = ecb().await;
 
     let mut r = Rated {
@@ -146,7 +211,7 @@ pub async fn currencies() -> impl IntoResponse {
     Json(fields)
 }
 
-pub async fn daily_rates() -> impl IntoResponse {
+pub async fn eur_rates() -> impl IntoResponse {
     //let y = ecb().await;
 
     let mut rates = Rate::default();
@@ -192,6 +257,61 @@ pub async fn daily_rates() -> impl IntoResponse {
         let _l = insert(xrates).await;
     }
     //    println!("{:?}", rates);
+    Json(rates)
+}
+
+pub async fn rates(Path(currency): Path<String>) -> impl IntoResponse {
+    //let y = ecb().await;
+    let mut rates = Rate::default();
+    let fields = Rate::field_names();
+    if fields.contains(&currency) {
+        let _d = new().await;
+        let row = last_records().await.unwrap();
+
+        //println!("{:?}", row);
+        if row.len() > 0 {
+            rates.date = row[0] as i32;
+            rates.jpy = row[1];
+            rates.czk = row[2];
+            rates.dkk = row[3];
+            rates.gbp = row[4];
+            rates.huf = row[5];
+            rates.pln = row[6];
+            rates.ron = row[7];
+            rates.sek = row[8];
+            rates.chf = row[9];
+            rates.isk = row[10];
+            rates.nok = row[11];
+            rates.aud = row[12];
+            rates.brl = row[13];
+            rates.cad = row[14];
+            rates.cny = row[15];
+            rates.hkd = row[16];
+            rates.idr = row[17];
+            rates.ils = row[18];
+            rates.inr = row[19];
+            rates.krw = row[20];
+            rates.mxn = row[21];
+            rates.myr = row[22];
+            rates.nzd = row[23];
+            rates.php = row[24];
+            rates.sgd = row[25];
+            rates.thb = row[26];
+            rates.zar = row[27];
+            rates.rub = row[28];
+            rates.usd = row[29];
+            rates.eur = row[30];
+        }
+        {
+            let xrates = get_ecb_rates().await.unwrap();
+            let _l = insert(xrates).await;
+        }
+
+        if currency != "eur" {
+            let _r = rates.set_base(&currency); //return the exchange based on the new base currency
+        }
+    }
+
     Json(rates)
 }
 
