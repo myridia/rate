@@ -1,3 +1,5 @@
+<img src="rate.svg" alt="rate" width="120">
+
 # ![email_gateway](pages/public/img/logo.png) rate
 * Myridia's online currency rate service
 
